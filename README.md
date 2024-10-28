@@ -4,14 +4,14 @@
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://choosealicense.com/)
 
 A collection of utility functions for C programming, designed to simplify common tasks such as printing, sorting, and fetching user input.
+This small project is still a work in progress.
 
 ## Table of Contents
 
 - [Features](#features)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Function Reference](#function-reference)
-- [License](#license)
+- [Function Types](#function-types)
 
 ## Features
 
@@ -24,9 +24,13 @@ A collection of utility functions for C programming, designed to simplify common
 
 You can integrate the utility functions into your C projects by including the `utils.h` header file. The functions are packaged in a static library, which can be linked to your project.
 
-### Using Conan
+## Usage
 
-1. Ensure you have [Conan](https://conan.io/) installed.
-2. Clone the repository:
-   ```bash
-   git clone https://github.com/Heisnx/Utility-Functions-for-C.git
+Just reference libutils.a and main_utils.h in your project.
+You'll have to include main_utils.h and reference libutils.a in the compiler.
+
+## Function Types
+
+- Fetching functions : used to get information from the user.
+- Printing functions : used to print information.
+- Sorting functions  : used to sort arrays and datasets.
