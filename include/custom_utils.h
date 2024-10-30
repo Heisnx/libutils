@@ -5,28 +5,17 @@
  * Author       : Heisnx (c)
  * Date Created : 29/10/2024
  * Last Modified: 30/10/2024
- * Version      : v1.0.2
+ * Version      : v1.0.3
  * License      : MIT
  * 
  * Description  :
  *      This is the main file of the library.
  *      It contains everything used in every source file.
  *
- * Changelog:
- *      - [v1.0.2] Removed bubble_sort().
- *      - [v1.0.2] Updated fetch_array().
- *      - [v1.0.2] MIN and MAX set to -1000 and 1000.
- *      - [v1.0.2] Merged fetch_int() and fetch_dbl() into fetch_number().
- *      - [v1.0.2] Updated BUFFER to 2^7 or 128.
- * 
  * Notes:
  *      - Possible to splinter utils.h into multiple headers    [Likely].
  *      - Might expand on array fetching further                [Unlikely].
  * 
- * Warnings:
- *      - If you are using an older version of this library in any project,
- *        changing to a newer version may come with errors.
- *      - It is advised you read the changelog before moving up a version.
  */
 
 #ifndef UTILS_H
