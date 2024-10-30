@@ -1,20 +1,20 @@
 /*
- * File: print_utils.c // Ali Allahverdiyev
+ * [ Utility ]
  * ----------------------
+ * File Name    : print_utils.c
+ * Author       : Heisnx (c)
+ * Date Created : 29/10/2024
+ * Last Modified: 30/10/2024
+ * 
  * Description:
- *      This file is filled with print-based utility functions
- *      that I plan on using for every lab task in the
- *      Programming I & Programming courses.
- * 
- * Elements:
- *      - print_separator()
- * 
- * Version: v1.0.0
- * Date of creation: 28/10/2024
- * Last modified: 28/10/2024
+ *      This source file contains functions oriented
+ *      at printing elements out stylistically.
+ *
+ * Warnings:
+ *      - No notable warnings as of v1.0.2
  */
 
-#include <main_utils.h>
+#include <utils.h>
 
 /*
  * print_separator()
@@ -35,22 +35,19 @@ void print_separator(void)
  * ----------------------
  * Description:
  *      Prints the elements of an array in a formatted list.
- * 
- * Warning:
- *      - A colon sign is put after the prompt.
  */
-void print_array(const int arr[], const char* prompt, int arr_len)
+void print_array(const int arr[], int len, const char* msg)
 {
-    printf("%s: ", prompt);
-    printf("{ ");
-    
-    for(int i = 0; i < arr_len; ++i)
+    printf("%s\n", msg);
+    printf("\t{ ");
+
+    for (int i = 0; i < len; ++i)
     {
         printf("%d", arr[i]);
 
-        if (i < arr_len - 1)
+        if (i < len - 1)
             printf(", ");
     }
 
-    printf(" }");
+    printf(" }\n");
 }

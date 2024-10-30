@@ -1,6 +1,6 @@
 # Utility Functions for C
 
-[![Version](https://img.shields.io/badge/version-v1.0.1-blue.svg)](https://shields.io/)
+[![Version](https://img.shields.io/badge/version-v1.0.2-blue.svg)](https://shields.io/)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://choosealicense.com/)
 
 A collection of utility functions for C programming, designed to simplify common tasks such as printing, sorting, and fetching user input.
@@ -12,6 +12,8 @@ This small project is still a work in progress.
 - [Installation](#installation)
 - [Usage](#usage)
 - [Function Types](#function-types)
+- [Warnings](#warnings)
+- [Compatibility](#compatibility)
 
 ## Features
 
@@ -34,3 +36,13 @@ You'll have to include main_utils.h and reference libutils.a in the compiler.
 - Fetching functions : used to get information from the user.
 - Printing functions : used to print information.
 - Sorting functions  : used to sort arrays and datasets.
+
+## Warnings
+
+This library uses the c17 standard for C.
+This library uses the gnu++17 standard for C++.
+
+## Compatibility
+
+May not work as intended on Mac or Linux operating systems.
+This library was compiled by using Makefile on a Windows OS.

@@ -1,23 +1,20 @@
 /*
- * File: sort_utils.c // Ali Allahverdiyev
+ * [ Utility ]
  * ----------------------
+ * File Name    : sort_utils.c
+ * Author       : Heisnx (c)
+ * Date Created : 29/10/2024
+ * Last Modified: 30/10/2024
+ * 
  * Description:
- *      This file is filled with sorting-based utility functions
- *      that I plan on using for every lab task in the
- *      Programming I & Programming courses.
- * 
- * Elements:
- *      - partition()
- *      - bubble_sort()
- *      - insertion_sort()
- *      - quick_sort()
- * 
- * Version: v1.0.0
- * Date of creation: 28/10/2024
- * Last modified: 28/10/2024
+ *      This source file contains functions oriented
+ *      at sorting arrays & datasets.
+ *
+ * Warnings:
+ *      - No notable warnings as of v1.0.2
  */
 
-#include <main_utils.h>
+#include <utils.h>
 
 /*
  * partition()
@@ -54,35 +51,6 @@ int partition(int arr[], int low, int high)
     arr[high] = temp;
     
     return i + 1;
-}
-
-/*
- * bubble_sort()
- * ----------------------
- * Description:
- *      Sorts the elements of an array in ascending order using
- *      the bubble sort algorithm. The largest elements bubble
- *      to the end of the array after each pass.
- *
- * Notes:
- *      - Is always O(n^2), making is only useful for mostly sorted
- *      small arrays.
- */
-void bubble_sort(int arr[], int arr_len) 
-{
-    for (int i = 0; i < arr_len - 1; ++i) 
-    {
-        for (int j = 0; j < arr_len - i - 1; ++j) 
-        {
-            if (arr[j] > arr[j + 1]) 
-            {
-                /* Swaps arr[j] and arr[j + 1] */
-                int temp = arr[j];
-                arr[j] = arr[j + 1];
-                arr[j + 1] = temp;
-            }
-        }
-    }
 }
 
 /*
