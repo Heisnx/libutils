@@ -36,8 +36,8 @@ $(BIN_DIR)/sort_utils.o: $(SRC_DIR)/sort_utils.c | $(BIN_DIR)
 
 # Install command to copy library and header files
 install: $(LIB_NAME)
-	install -Dm644 $(LIB_NAME) /usr/local/lib/$(LIB_NAME)  # Update this if necessary
-	install -Dm644 $(INCLUDE_DIR)/utils.h /usr/local/include/utils.h
+	install -Dm644 $(LIB_NAME) C:/msys64/usr/lib/libutils.a
+	install -Dm644 $(INCLUDE_DIR)/utils.h C:/msys64/usr/include/utils.h
 
 # Target to build a main program that uses the library
 main: main.c $(LIB_NAME)
