@@ -26,7 +26,7 @@
 #include <stdlib.h>             // to convert values from string to long integer and double
 #include <errno.h>              // to detect range errors in the fetch functions
 #include <stdbool.h>            // to identify whether the required value is int or double in fetch_value()
-#include <string.h>             // to deal with string logic in fetch()
+#include <string.h>             // to deal with string logic in fetch_string()
 
 /* [ Macros ]  */
 #define BUFFER (256)                // buffer limit
@@ -46,7 +46,6 @@ typedef enum
     TYPE_X,     // [ hexadecimal ]      [ 4/8 bytes ]
     TYPE_F,     // [ float ]            [ 4 bytes ]
     TYPE_LF,    // [ double ]           [ 8 bytes ]  
-    TYPE_C,     // [ char ]             [ 1 byte ]
     TYPE_S      // [ string ]           [ x bytes ]
 } Fetch_Type;
 
@@ -81,7 +80,7 @@ static inline bool is_empty(const char *buffer)
  */
 static inline bool validate(const char *endptr, double input, double min, double max)
 {
-    return (errno == 0 && *endptr == '\n' && input >= min && input <= max);
+    return (errno != 0 && *endptr != '\0' && input < min && input > max);
 }
 
 /* [ Functions ] */
@@ -107,7 +106,7 @@ static inline bool validate(const char *endptr, double input, double min, double
 void print_divider(size_t len, Char_Type divider);
 
 /*
- * Function: print_array()
+ * Function: print_number_array()
  * ----------------------
  * Description:
  *      Prints the elements of an array in a formatted list.
@@ -122,7 +121,7 @@ void print_divider(size_t len, Char_Type divider);
  * Notes:
  *      - Leave msg blank for no message.
  */
-void print_array(const int arr[], int arr_len, const char* msg);
+void print_number_array(void *arr, int len, const char *msg, Fetch_Type type);
 
 /*
  * Function: print_progress_bar()
@@ -209,24 +208,23 @@ void quick_sort(int arr[], int low, int high);
  * Function: fetch_array()
  * ----------------------
  * Description:
- *      Reads an array of integers or doubles from the input stream based on is_int flag.
- *      Provides stylized prompting, including element count.
+ *      Reads arrays based off of fetch_number().
  *
  * Arguments:
  *      arr         : Void pointer to an integer or double array.
  *      len         : Number of elements in the array.
  *      prompt      : Prompt message to display for each element.
  *      type        : The data type that is expected.
- *      disp_cnt    : The option to display counter.
  *      min         : Minimal argument accepted.
  *      max         : Maximal argument accepted.
+ *      disp_cnt    : The option to display counter.
  * 
  * Return: -
  */
-void fetch_array(void *arr, int len, const char *prompt, Fetch_Type type, bool disp_cnt, double min, double max);
+void fetch_number_array(void *arr, int len, const char *prompt, Fetch_Type type, double min, double max, bool disp_cnt);
 
 /*
- * Function: fetch()
+ * Function: fetch_number()
  * ----------------------
  * Description:
  *      Outputs prompt, reads input using fgets(),
@@ -241,12 +239,22 @@ void fetch_array(void *arr, int len, const char *prompt, Fetch_Type type, bool d
  *      - type  : The type of the final value.
  * 
  * Return: -
- * 
- * Warning:
- *      - For TYPE_C, only the first value of the buffer will be read,
- *        regardless of there being other values in buffer.
  */
-void fetch(void *input, const char *prompt, double min, double max, Fetch_Type type);
+void fetch_number(void *input, const char *prompt, double min, double max, Fetch_Type type);
+
+/*
+ * Function: fetch_string()
+ * ----------------------
+ * Description:
+ *      Fetches a string value from the user.
+ * 
+ * Arguments:
+ *      - input     : Where to store the input.
+ *      - prompt    : Message sent out to user.
+ * 
+ * Return: - 
+ */
+void fetch_string(char *input, const char *prompt);
 
 #endif // CUSTOM_UTILS_H
 

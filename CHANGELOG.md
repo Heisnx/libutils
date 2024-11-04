@@ -78,8 +78,22 @@
     - Reintroduced `bubble_sort()` from v1.0.1.
     - Added `merge()` and `merge_sort()` for sorting algorithms.
 
+## [v1.1.1] - 05/11/2024 [Patch]
+### Changes
+- **`fetch_utils.c`**
+    - Readded `fetch_number()`, replacing `fetch()`.
+    - Improved `fetch_number()` logic (compared to `fetch()`).
+    - Added new `fetch_string()` function.
+    - Changed `fetch_array()` to `fetch_number_array()`
+
+- **`print_utils.c`**
+    - Changed `print_array()` to `print_number_array()`
+    that can print arrays of the same data types as `fetch_number()`
+    except octals and hexadecimals.
+
 ### Considerations
 - Future plans to split `utils.h` into multiple header files.
+- May add more string fetching options.
 
 ### Warnings
 - Users of older versions should review this changelog for potential compatibility issues before upgrading, especially regarding function removals and significant changes in functionality.

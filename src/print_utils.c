@@ -48,19 +48,36 @@ void print_divider(size_t len, Char_Type divider)
 }
 
 /*
- * print_array()
+ * print_number_array()
  * ----------------------
  * Description:
  *      Prints the elements of an array in a formatted list.
  */
-void print_array(const int arr[], int len, const char* msg)
+void print_number_array(void *arr, int len, const char *msg, Fetch_Type type)
 {
     printf("%s\n", msg);
     printf("\t{ ");
 
     for (int i = 0; i < len; ++i)
     {
-        printf("%d", arr[i]);
+        switch (type)
+        {
+            case TYPE_LD:
+                printf("%ld", *((long int *)arr + i));
+                break;
+            case TYPE_LLD:
+                printf("%lld", *((long long int *)arr + i));
+                break;
+            case TYPE_F:
+                printf("%.2f", *((float *)arr + i));
+                break;
+            case TYPE_LF:
+                printf("%.2lf", *((double *)arr + i));
+                break;
+            default:
+                fputs("[!] Unsupported type\n", stderr);
+                return;
+        }
 
         if (i < len - 1)
             printf(", ");
