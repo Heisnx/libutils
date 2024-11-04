@@ -21,7 +21,7 @@
     - Added `print_separator()` to print 100 equals signs.
     - Introduced `print_array()` to print integer arrays.
 
-## [v1.0.1] - 29/10/2024 [Tweak]
+## [v1.0.1] - 29/10/2024 [Patch]
 ### Changes
 - **Global**
     - Added repository to GitHub.
@@ -41,7 +41,7 @@
 - **`sort_utils.c`**
     - Removed `bubble_sort()`.
 
-## [v1.0.3] - 30/10/2024 [Tweak]
+## [v1.0.3] - 30/10/2024 [Patch]
 ### Changes
 - **Global**
     - Added compatibility for Unix-based OS (macOS & Linux).
