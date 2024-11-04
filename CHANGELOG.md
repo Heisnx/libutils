@@ -12,7 +12,7 @@
     - Introduced `fetch_double()` to safely fetch doubles.
     - Added `fetch_array()` for filling integer arrays.
 
-- **`sort_utils.h`**
+- **`sort_utils.c`**
     - Implemented `bubble_sort()` for integer arrays.
     - Implemented `insertion_sort()` for integer arrays.
     - Introduced `quick_sort()` and `partition()` for integer arrays.
