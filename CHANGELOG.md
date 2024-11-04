@@ -12,7 +12,7 @@
     - Introduced `fetch_double()` to safely fetch doubles.
     - Added `fetch_array()` for filling integer arrays.
 
-- **`sort_utils.h`**
+- **`sort_utils.c`**
     - Implemented `bubble_sort()` for integer arrays.
     - Implemented `insertion_sort()` for integer arrays.
     - Introduced `quick_sort()` and `partition()` for integer arrays.
@@ -21,7 +21,7 @@
     - Added `print_separator()` to print 100 equals signs.
     - Introduced `print_array()` to print integer arrays.
 
-## [v1.0.1] - 29/10/2024 [Tweak]
+## [v1.0.1] - 29/10/2024 [Patch]
 ### Changes
 - **Global**
     - Added repository to GitHub.
@@ -37,11 +37,13 @@
 - **`fetch_utils.c`**
     - Introduced `fetch_number()` to read both integer and double values.
     - Updated `fetch_array()` to align with `fetch_number()` functionality.
+    - Removed `fetch_int()`
+    - Removed `fetch_double()`
 
 - **`sort_utils.c`**
     - Removed `bubble_sort()`.
 
-## [v1.0.3] - 30/10/2024 [Tweak]
+## [v1.0.3] - 30/10/2024 [Patch]
 ### Changes
 - **Global**
     - Added compatibility for Unix-based OS (macOS & Linux).
