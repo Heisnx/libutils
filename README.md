@@ -140,7 +140,7 @@ To enhance the clarity of the output in your program, we use the following symbo
 - `[-]`: User input prompt - This symbol precedes messages that expect user input.
 - `[*]`: Debug output - This symbol is used for debugging information that may help in diagnosing issues during development.
 - `[!]`: Error messages - This symbol indicates that an error has occurred, providing details about what went wrong.
-- `[?]`: Warning messages - This symbol is used to flag potential issues that do not stop the program but should be noted. (UNUSED AS OF V1.1.0)
+- `[?]`: Warning messages - This symbol is used to flag potential issues that do not stop the program but should be noted.
 
 ## Notes
 
