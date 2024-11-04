@@ -1,0 +1,16 @@
+# customutilsConfig.cmake.in
+
+@PACKAGE_INIT@
+
+set(customutils_INCLUDE_DIRS "@PACKAGE_INCLUDE_DIRS@")
+set(customutils_LIBRARIES "@PACKAGE_LIBRARIES@")
+
+# Optionally provide version information
+set(customutils_VERSION "@PACKAGE_VERSION@")
+
+# Provide an interface for other CMake projects
+include(CMakeFindDependencyMacro)
+find_dependency("AnotherLibrary")
+
+# Mark the include directories for consumers
+include_directories(${customutils_INCLUDE_DIRS})

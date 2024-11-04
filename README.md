@@ -1,6 +1,6 @@
 # Utility Functions for C
 
-[![Version](https://img.shields.io/badge/version-v1.0.3-red.svg)](https://shields.io/)
+[![Version](https://img.shields.io/badge/version-v1.1.0-red.svg)](https://shields.io/)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://choosealicense.com/)
 
 A collection of utility functions for C programming, designed to simplify common tasks such as printing, sorting, and fetching user input. This small project is still a work in progress.
@@ -8,40 +8,19 @@ A collection of utility functions for C programming, designed to simplify common
 ## Table of Contents
 
 - [Features](#features)
+- [Function Types](#function-types)
 - [Installation](#installation)
 - [Usage](#usage)
-- [Function Types](#function-types)
-- [Warnings](#warnings)
+- [Symbol Notation](#symbol-notation)
+- [Notes](#notes)
 - [Compatibility](#compatibility)
 
 ## Features
 
 - **Printing Functions**: Easily print arrays and separators.
-- **Sorting Algorithms**: Implementations of bubble sort, insertion sort, and quick sort.
-- **Input Handling**: Fetch integers and doubles with input validation.
-- **Array Handling**: Read arrays from user input with styled prompts.
-
-## Installation
-
-You can integrate the utility functions into your C projects by including the `custom_utils.h` header file. The functions are packaged in a static library (`libutils.a`), which gets installed into the `ucrt64/lib` and `ucrt64/include` folders. 
-
-To compile the library, you will need to use the provided `Makefile`. Depending on your operating system, you may want to modify some parts of the `Makefile` for better compatibility. If you wish to change the installation paths, please look in the `Makefile` for configuration options.
-
-## Usage
-
-To integrate the library into your project, follow these steps:
-
-1. **Update the Makefile**: Modify the Makefile according to your compiler. (GCC is the default.)
-2. **Adjust Installation Paths**: Change the install paths based on your operating system. (Default is `msys64/ucrt64`.)
-3. **Compile the Library**: Run the Makefile to compile the library.
-4. **Set System Path**: Ensure that the directory where you installed the library is included in your system path.
-5. **Create a Project Makefile**: Navigate to your project directory and create a new Makefile.
-6. **Link the Library**: Use the following command in your Makefile to link the library to your project:
-
-   ```makefile
-   $(EXEC): $(OBJS)
-       $(CC) $(OBJS) -o $(EXEC) -L"ucrt64/lib" -lcustomutils
-
+- **Sorting Algorithms**: Implementations of insertion sort and quick sort.
+- **Input Handling**: Fetch a variety of values with error-checking.
+- **Array Handling**: Fill a variety of array types with error-checking.
 
 ## Function Types
 
@@ -49,14 +28,127 @@ To integrate the library into your project, follow these steps:
 - **Printing functions**: Used to print information.
 - **Sorting functions**: Used to sort arrays and datasets.
 
+## Installation
+
+To integrate the `libutils` library into your system, follow these steps:
+
+1. Clone this repository to your machine
+2. Create a `build` directory within the root directory of this repository:
+
+```bash
+mkdir build
+cd build
+```
+
+3. Make sure that you have CMake installed on your machine.
+4. Within the build directory, run this code:
+
+```bash
+cmake ..
+cmake --build .
+cmake --install . --prefix "<your-active-compiler-path>"
+```
+
+5. If you wish to install this library to the default location (e.g., C:\Program Files (x86)), you can run the install command without specifying the prefix:
+
+```bash
+cmake --install .
+```
+
+## Usage
+
+This part will include the simplest definitions of a `Makefile` and `CMakeLists.txt` files
+to demonstrate the usage of the library.
+
+**WARNING:** Always replace `"<your-active-compiler-path/lib>"` and `"<your-active-compiler-path/include>"` with the actual paths where the library and header files are installed.
+
+### Makefile
+
+```makefile
+# Compiler
+CC = gcc
+
+# Compiler flags
+CFLAGS = -I. -Wall -g  # Include current directory for header file
+
+# Source files
+SRCS = main.c
+
+# Executable name
+EXEC = program.exe
+
+# Default target
+all: $(EXEC)
+
+# Link the object files to create the executable
+$(EXEC): $(SRCS)
+	$(CC) $(SRCS) -o $(EXEC) -L"<your-active-compiler-path/lib>" -lcustomutils
+
+# Clean up
+clean:
+	rm -f $(EXEC)
+
+.PHONY: all clean
+```
+
+### CMake
+
+```cmake
+cmake_minimum_required(VERSION 3.10)
+project(MyProject)
+
+# Find the customutils library
+find_library(CUSTOMUTILS_LIB customutils PATHS "<your-active-compiler-path/lib>")
+find_path(CUSTOMUTILS_INCLUDE_DIR custom_utils.h PATHS "<your-active-compiler-path/include>")
+
+# Include directories
+include_directories(${CUSTOMUTILS_INCLUDE_DIR})
+
+# Source files
+set(SOURCES main.c)
+
+# Create the executable
+add_executable(program ${SOURCES})
+
+# Link the customutils library
+target_link_libraries(program ${CUSTOMUTILS_LIB})
+```
+
+## C file
+```c
+#include <custom_utils.h> // always make sure to include
+// or #include "custom_utils.h"
+
+int main()
+{
+    // example usage
+    int num;
+
+    fetch(&num, "[+] Please input value: ", 0, 5, TYPE_LD);
+
+    printf("%d\n", num);
+
+    return 0;
+}
+```
+
+## Symbol Notation
+
+To enhance the clarity of the output in your program, we use the following symbols:
+
+- `[+]`: Program output - This symbol is used for general messages from the program, indicating successful actions or confirmations.
+- `[-]`: User input prompt - This symbol precedes messages that expect user input.
+- `[*]`: Debug output - This symbol is used for debugging information that may help in diagnosing issues during development.
+- `[!]`: Error messages - This symbol indicates that an error has occurred, providing details about what went wrong.
+- `[?]`: Warning messages - This symbol is used to flag potential issues that do not stop the program but should be noted. (UNUSED AS OF V1.1.0)
+
 ## Notes
 
 This library uses the C17 standard for C.
 This library uses the GNU++17 standard for C++.
 
+**WARNING:** Make sure that there are no conflicting names when using this library.
+
 ## Compatibility
 
-The static library `libutils.a` is compatible with Windows, macOS, and Linux by default. However, please note that the library may not work as intended on macOS or Linux operating systems without some adjustments to the `Makefile`. This library was compiled using the `Makefile` on a Windows OS.
-
-`libutils.a`and `custom_utils.h` get installed into the `/ucrt64/lib` and `/ucrt64/include` directories.
-If you need those files somewhere else, please change the path in the makefile.
+The static library `libutils.a` is compatible with Windows, macOS, and Linux by default. However, please note that the library may not work as intended on any operating system without some adjustments to the paths - it depends on what compiler you're using.

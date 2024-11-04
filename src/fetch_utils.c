@@ -4,14 +4,15 @@
  * File Name    : fetch_utils.c
  * Author       : Heisnx (c)
  * Date Created : 29/10/2024
- * Last Modified: 30/10/2024
+ * Last Modified: 04/11/2024
  * 
  * Description:
  *      This source file contains functions oriented
  *      at receiving user input.
  *
  * Warnings:
- *      - No notable warnings as of v1.0.2
+ *      - [v1.0.4] fetch() with TYPE_C will always read the first value
+ *        of the input buffer even if the user input more than 1 character.
  */
 
 /* [ Headers ] */
@@ -21,112 +22,145 @@
  * fetch_array()
  * ----------------------
  * Description:
- *      Reads an array of integers or doubles from the input stream based on is_int flag.
- *      Provides stylized prompting, including element count.
- *
- * Warning:
- *      [%d]/[%d] is always printed after the prompt
- *      to indicate the amount of remaining elements.
+ *      Reads array elements with fetch().
+ *      Has the option to display remaining elements.
+ *      
+ * Notes:
+ *      - If you're expecting a character or string value,
+ *        ignore the min and max arguments as they will not be used.
+ *        You can set them to anything.
  */
-void fetch_array(void *arr, int len, const char *prompt, bool is_int)
+void fetch_array(void *arr, int len, const char *prompt, Fetch_Type type, bool disp_cnt, double min, double max)
 {
     char buffer[BUFFER];
 
-    /* 1. Start the loop to ask the user for every element. */
     for (int i = 0; i < len; ++i) 
     {
-        /* 2. Create the prompt. */
-        snprintf(buffer, sizeof(buffer), "%s [%d]/[%d]: ", prompt, i + 1, len);
-
-        /* 3. If integer is expected, explicitly casts to integer. */
-        if (is_int) 
-            fetch_number(&((int*)arr)[i], buffer, MIN, MAX, true);
-
-        /* 4. Otherwise, casts to double. */
+        if (disp_cnt)
+            snprintf(buffer, sizeof(buffer), "%s [%d]/[%d]: ", prompt, i + 1, len);
         else
-            fetch_number(&((double*)arr)[i], buffer, (double)MIN, (double)MAX, false);
+            snprintf(buffer, sizeof(buffer), "%s", prompt);
+
+        // Adjusting for proper typecasting based on Fetch_Type
+        switch (type)
+        {
+            case TYPE_LD:
+                fetch((int*)arr + i, buffer, min, max, type);
+                break;
+            case TYPE_LLD:
+                fetch((long int *)arr+i, buffer, min, max, type);
+                break;
+            case TYPE_LF:
+                fetch((double*)arr + i, buffer, min, max, type);
+                break;
+            case TYPE_F:
+                fetch((float*)arr + i, buffer, min, max, type);
+                break;
+            case TYPE_C:
+            case TYPE_S:
+                fetch((char*)arr + i, buffer, min, max, type);
+                break;
+            default:
+                fputs("[!] Unsupported type\n", stderr);
+                break;
+        }
     }
 }
 
 /*
- * Function: fetch_number()
+ * Function: fetch()
  * ----------------------
  * Description:
- *      Prompts the user with a given message, reads input using fgets(),
- *      and converts it to either an integer or double based on the is_int flag.
- *      Validates the input within the provided range.
- *
- * Parameters:
- *      - input   : Void pointer to store either an integer or double.
- *      - prompt  : Prompt message to display before reading input.
- *      - min     : Minimum acceptable value (as double for compatibility).
- *      - max     : Maximum acceptable value (as double for compatibility).
- *      - is_int  : Flag indicating if the input should be an integer (true) or double (false).
- *
- * Returns:
- *      0 on success & -1 on error.
+ *      Outputs prompt, reads input using fgets(),
+ *      converts it to selected type, and validates 
+ *      the input.
  */
-int fetch_number(void *input, const char *prompt, double min, double max, bool is_int) 
+/*
+ * Function: fetch()
+ * ----------------------
+ * Description:
+ *      Outputs prompt, reads input using fgets(),
+ *      converts it to the selected type, and validates 
+ *      the input.
+ */
+void fetch(void *input, const char *prompt, double min, double max, Fetch_Type type)
 {
-    char buffer[BUFFER];
+    bool is_numeric_input = (type != TYPE_C && type != TYPE_S);
+    char buffer[BUFFER];    // this is where fgets() stores the initial input
 
-    while (true) 
+    do
     {
-        /* 1. Output user prompt. */
         printf("%s", prompt);
 
-        /* 2. Uses fgets() to handle input. */
-        if (fgets(buffer, sizeof(buffer), stdin) != NULL) 
+        if (fgets(buffer, sizeof(buffer), stdin))
         {
             char *endptr;
             errno = 0;
 
-            /* 3a. If an integer is expected, converts to long int. */
-            if (is_int) 
+            // Checks if the input is empty
+            if (is_empty(buffer)) 
             {
-                long value = strtol(buffer, &endptr, 10);
-                
-                /* 4a. Checks for integer input for errors. */
-                if (endptr == buffer || *endptr != '\n')
-                    fputs("[!] Invalid input (non-integer or extra characters)\n", stderr);
-
-                else if (errno == ERANGE || value < (long)min || value > (long)max)
-                    printf("[!] Please input an integer between %.0f and %.0f\n", min, max);
-
-                /* 5a. Explicitly casts the integer value to input. */
-                else 
-                {
-                    *(int*)input = (int)value;
-                    return 0;
-                }
+                fputs("[!] Input cannot be empty or a new line character\n", stderr);
+                continue;   // Retries the loop
             }
 
-            /* 3b. If a double is expected, converts to long float (double). */
+            if (is_numeric_input) 
+            {
+                double value = 0.0; // Temporary variable to store the parsed value
+                switch (type) 
+                {
+                    case TYPE_LD:   value = (double)strtol(buffer, &endptr, 10); break;
+                    case TYPE_LLD:  value = (double)strtoll(buffer, &endptr, 10); break;
+                    case TYPE_O:    value = (double)strtoul(buffer, &endptr, 8); break;
+                    case TYPE_X:    value = (double)strtoul(buffer, &endptr, 16); break;
+                    case TYPE_F:    value = (double)strtof(buffer, &endptr); break;
+                    case TYPE_LF:   value = strtod(buffer, &endptr); break;
+                    default:        continue; // Unexpected input
+                }
+
+                // Checks for conversion errors
+                if (endptr == buffer || *endptr != '\n' || errno == ERANGE) 
+                {
+                    fputs("[!] Invalid input\n", stderr);
+                    continue; // Retries the loop
+                }
+
+                // Validates range
+                if (validate(endptr, value, min, max))
+                {
+                    // Stores the validated value in the provided input pointer
+                    switch (type) {
+                        case TYPE_LD:   *(long *)input = (long)value; break;
+                        case TYPE_LLD:  *(long long *)input = (long long)value; break;
+                        case TYPE_O:    *(unsigned long *)input = (unsigned long)value; break;
+                        case TYPE_X:    *(unsigned long *)input = (unsigned long)value; break;
+                        case TYPE_F:    *(float *)input = (float)value; break;
+                        case TYPE_LF:   *(double *)input = value; break;
+                    }
+                    break; // Exits the loop on success
+                }
+                else
+                    printf("[!] Invalid input: range is %.1lf => %.1lf\n", min, max);
+            } 
             else 
             {
-                double value = strtod(buffer, &endptr);
-
-                /* 4a. Checks for double input for errors. */
-                if (endptr == buffer || *endptr != '\n')
-                    fputs("[!] Invalid input (non-numeric or extra characters)\n", stderr);
-
-                else if (errno == ERANGE || value < min || value > max)
-                    printf("[!] Please input a value between %.2lf and %.2lf\n", min, max);
-
-                /* 5a. Explicitly casts the double value to input. */
-                else 
+                if (type == TYPE_C)
                 {
-                    *(double*)input = value;
-                    return 0;
+                    *(char *)input = buffer[0];
+                    break;  // Exits the loop
+                }
+                else if (type == TYPE_S) 
+                {
+                    strncpy((char *)input, buffer, BUFFER - 1);
+                    ((char *)input)[strcspn((char *)input, "\n")] = 0; // Removes the newline
+                    break;  // Exits the loop on success
                 }
             }
         }
-
-        /* 6. If input is unknown, it exits without processing further. */
-        else 
-        {
-            fputs("[!] Error handling input\n", stderr);
-            return -1;
-        }
-    }
+        else
+            fputs("[!] Error reading input\n", stderr);
+    } 
+    while (true);
 }
+
+/* fetch_utils.c */
