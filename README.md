@@ -151,4 +151,4 @@ This library uses the GNU++17 standard for C++.
 
 ## Compatibility
 
-The static library `libutils.a` is compatible with Windows, macOS, and Linux by default. However, please note that the library may not work as intended on any operating system without some adjustments to the paths - it depends on what compiler you're using.
+The static library `libcustomutils.a` is compatible with Windows, macOS, and Linux by default. However, please note that the library may not work as intended on any operating system without some adjustments to the paths - it depends on what compiler you're using.
