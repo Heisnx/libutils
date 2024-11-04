@@ -37,6 +37,8 @@
 - **`fetch_utils.c`**
     - Introduced `fetch_number()` to read both integer and double values.
     - Updated `fetch_array()` to align with `fetch_number()` functionality.
+    - Removed `fetch_int()`
+    - Removed `fetch_double()`
 
 - **`sort_utils.c`**
     - Removed `bubble_sort()`.
