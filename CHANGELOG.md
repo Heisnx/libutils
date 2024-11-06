@@ -114,13 +114,21 @@
         - Reset (reset colour).
 
 - **`print_utils.h`**
-    - New function `print_warning()`
-    - New function `print_error()`
-    - Enhanced `print_number_array()`
+    - New function `print_warning()`.
+    - New function `print_error()`.
+    - Enhanced `print_number_array()`.
 
 - **`fetch_utils.c`**
     - Fixed `fetch_number()` logic to properly handle non-numeric inputs.
     - Fixed `fetch_number()` conversion logic (again).
+
+## [v1.2.1] - 05/11/2024 [Patch]
+### Changes
+- **Global**
+    - Minor tweaks.
+
+- **`print_utils.h`**
+    - New function `print_debug()`.
 
 ### Considerations
 - None as of v1.2.0

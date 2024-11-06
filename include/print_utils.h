@@ -108,6 +108,20 @@ void print_warning(const char *format, ...);
  */
 void print_error(const char *format, ...);
 
+/*
+ * Function: print_debug()
+ * ----------------------
+ * Description:
+ *      Prints out a debug message with whatever amount of arguments.
+ * 
+ * Arguments:
+ *      - format: A string containing the format specification for the debug message.
+ *      - ...   : Additional arguments that match the format placeholders (e.g., integers, floats, strings).
+ * 
+ * Return: -
+ */
+void print_debug(const char *format, ...);
+
 #endif // PRINT_UTILS_H
 
 /* print_utils.h */

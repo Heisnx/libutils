@@ -178,5 +178,21 @@ void print_error(const char *format, ...)
     va_end(args);
 }
 
+/*
+ * Function: print_debug()
+ * ----------------------
+ * Description:
+ *      Prints out a debug message with whatever amount of arguments.
+ */
+void print_debug(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    fprintf(stderr, BOLD BLUE "[*] ");
+    vfprintf(stderr, format, args);
+    fprintf(stderr, RESET);
+    va_end(args);
+}
+
 
 /* print_utils.c */

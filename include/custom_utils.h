@@ -5,7 +5,7 @@
  * Author       : Heisnx (c)
  * Date Created : 29/10/2024
  * Last Modified: 05/11/2024
- * Version      : v1.2.0
+ * Version      : v1.2.1
  * License      : MIT
  * 
  * Description  :
