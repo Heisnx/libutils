@@ -1,5 +1,5 @@
 /*
- * [ Utility ]
+ * [ libcustomutils ]
  * ----------------------
  * File Name    : print_utils.c
  * Author       : Heisnx (c)
@@ -14,7 +14,9 @@
  *      - No notable warnings as of v1.0.2
  */
 
+/* [ Headers ] */
 #include <custom_utils.h>
+#include <print_utils.h>
 
 /*
  * print_divider()
@@ -55,7 +57,7 @@ void print_divider(size_t len, Char_Type divider)
  */
 void print_number_array(void *arr, int len, const char *msg, Fetch_Type type)
 {
-    printf("%s\n", msg);
+    printf(BOLD "%s\n" RESET, msg);
     printf("\t{ ");
 
     for (int i = 0; i < len; ++i)
@@ -63,19 +65,19 @@ void print_number_array(void *arr, int len, const char *msg, Fetch_Type type)
         switch (type)
         {
             case TYPE_LD:
-                printf("%ld", *((long int *)arr + i));
+                printf(GREEN "%ld", *((long int *)arr + i));
                 break;
             case TYPE_LLD:
-                printf("%lld", *((long long int *)arr + i));
+                printf(GREEN "%lld", *((long long int *)arr + i));
                 break;
             case TYPE_F:
-                printf("%.2f", *((float *)arr + i));
+                printf(GREEN "%.2f", *((float *)arr + i));
                 break;
             case TYPE_LF:
-                printf("%.2lf", *((double *)arr + i));
+                printf(GREEN "%.2lf", *((double *)arr + i));
                 break;
             default:
-                fputs("[!] Unsupported type\n", stderr);
+                print_warning("Unsupported type\n");
                 return;
         }
 
@@ -83,7 +85,7 @@ void print_number_array(void *arr, int len, const char *msg, Fetch_Type type)
             printf(", ");
     }
 
-    printf(" }\n");
+    printf( RESET " }\n");
 }
 
 /*
@@ -119,12 +121,12 @@ void print_progress_bar(int progress, int total, int width, Char_Type fill_compl
 
     if (total <= 0 || width <= 0) 
     {
-        printf("[!] Total and width must be greater than 0\n");
+        print_error("[!] Total and width must be greater than 0\n");
         return;
     }
     else if (progress > total)
     {
-        printf("[!] Progress made cannot be larger than total\n");
+        print_error("[!] Progress made cannot be larger than total: [ %d ] > [ %d ]\n", progress, total);
         return;
     }
 
@@ -143,5 +145,38 @@ void print_progress_bar(int progress, int total, int width, Char_Type fill_compl
     printf("] %.2f%%\n", ratio * 100);
     fflush(stdout);
 }
+
+/*
+ * Function: print_warning()
+ * ----------------------
+ * Description:
+ *      Prints out a warning message with whatever amount of arguments.
+ */
+void print_warning(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    fprintf(stderr, BOLD YELLOW "[?] ");
+    vfprintf(stderr, format, args);
+    fprintf(stderr, RESET);
+    va_end(args);
+}
+
+/*
+ * Function: print_error()
+ * ----------------------
+ * Description:
+ *      Prints out an error message with whatever amount of arguments.
+ */
+void print_error(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    fprintf(stderr, BOLD RED "[!] ");
+    vfprintf(stderr, format, args);
+    fprintf(stderr, RESET);
+    va_end(args);
+}
+
 
 /* print_utils.c */

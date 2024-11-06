@@ -1,6 +1,6 @@
 # Utility Functions for C
 
-[![Version](https://img.shields.io/badge/version-v1.1.0-red.svg)](https://shields.io/)
+[![Version](https://img.shields.io/github/v/release/Heisnx/libutils.svg)](https://github.com/Heisnx/libutils/releases)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://choosealicense.com/)
 
 A collection of utility functions for C programming, designed to simplify common tasks such as printing, sorting, and fetching user input. This small project is still a work in progress.
@@ -30,9 +30,23 @@ A collection of utility functions for C programming, designed to simplify common
 
 ## Installation
 
+**WARNING:** Before installation, ensure that you have CMake installed on your machine and a valid C/C++ compiler.
+
+**WARNING:** If you wish to install this library into system directories (like `Program Files` or `/usr/local`), you may need administrator permissions.
+
+**NOTE:** Reinstall the library will always replace the old files.
+
+**TIP:** It’s recommended to proceed with this guide using Visual Studio Code or any CMake-compatible IDE.
+ 
 To integrate the `libutils` library into your system, follow these steps:
 
-1. Clone this repository to your machine
+1. Clone this repository to your local machine.
+
+```bash
+git clone https://github.com/Heisnx/libutils.git
+cd libutils
+```
+
 2. Create a `build` directory within the root directory of this repository:
 
 ```bash
@@ -40,8 +54,8 @@ mkdir build
 cd build
 ```
 
-3. Make sure that you have CMake installed on your machine.
-4. Within the build directory, run this code:
+3. Within the build directory, you need to configure CMake. This is usually available as an option in 
+Visual Studio Code, but if not, then you can proceed with:
 
 ```bash
 cmake ..
@@ -49,7 +63,8 @@ cmake --build .
 cmake --install . --prefix "<your-active-compiler-path>"
 ```
 
-5. If you wish to install this library to the default location (e.g., C:\Program Files (x86)), you can run the install command without specifying the prefix:
+4. However, if you wish to install this library to your program files or local files, you can run the install command without specifying the prefix;
+just note that it may require administrator permissions, so you may want to run terminal as admin (if it's possible):
 
 ```bash
 cmake --install .
@@ -57,76 +72,88 @@ cmake --install .
 
 ## Usage
 
-This part will include the simplest definitions of a `Makefile` and `CMakeLists.txt` files
-to demonstrate the usage of the library.
-
 **WARNING:** Always replace `"<your-active-compiler-path/lib>"` and `"<your-active-compiler-path/include>"` with the actual paths where the library and header files are installed.
 
-### Makefile
+**WARNING:** `fetch_utils.h` already includes `print_utils.h`, so there is no need to re-include it again in your projects.
 
-```makefile
-# Compiler
-CC = gcc
+**INFO:** Since version 1.2.0, this library became modular, so you may want to include the specific header of the functions you're going to use.
 
-# Compiler flags
-CFLAGS = -I. -Wall -g  # Include current directory for header file
+Once the library is installed, you can start using it in your C/C++ projects. Below are the steps to integrate the `libcustomutils` library into your own project:
 
-# Source files
-SRCS = main.c
+1. Start by including the needed header files:
 
-# Executable name
-EXEC = program.exe
-
-# Default target
-all: $(EXEC)
-
-# Link the object files to create the executable
-$(EXEC): $(SRCS)
-	$(CC) $(SRCS) -o $(EXEC) -L"<your-active-compiler-path/lib>" -lcustomutils
-
-# Clean up
-clean:
-	rm -f $(EXEC)
-
-.PHONY: all clean
+```c
+#include <fetch_utils.h>    // for fetch utility functions
+#include <print_utils.h>    // for print utility functions
+#include <sort_utils.h>     // for sorting utility functions
 ```
 
-### CMake
+2. Then, link against the library and make sure to replace `/path/to/libutils` with the proper path that you installed the library to:
 
 ```cmake
-cmake_minimum_required(VERSION 3.10)
-project(MyProject)
+# In your project's CMakeLists.txt
 
-# Find the customutils library
-find_library(CUSTOMUTILS_LIB customutils PATHS "<your-active-compiler-path/lib>")
-find_path(CUSTOMUTILS_INCLUDE_DIR custom_utils.h PATHS "<your-active-compiler-path/include>")
+# Set the path to your installed library (if not installed globally)
+# set(LIBUTILS_PATH "/path/to/libutils")
 
-# Include directories
-include_directories(${CUSTOMUTILS_INCLUDE_DIR})
-
-# Source files
-set(SOURCES main.c)
-
-# Create the executable
-add_executable(program ${SOURCES})
-
-# Link the customutils library
-target_link_libraries(program ${CUSTOMUTILS_LIB})
+# Link the library
+target_link_libraries(your_target PRIVATE libutils)
 ```
 
-## C file
+3. If you're only using Makefile, you can still link against the library as shown in this template Makefile:
+
+```makefile
+# Path to your libutils installation
+LIBUTILS_PATH = /path/to/libutils
+
+# Compiler and flags
+CC = gcc
+CFLAGS = -Wall -std=c99
+
+# Include the path to the libutils headers
+INCLUDE_PATH = $(LIBUTILS_PATH)/include
+
+# Path to libutils library (libutils.a or libutils.so)
+LIBRARY_PATH = $(LIBUTILS_PATH)/lib
+
+# Library name (assuming static library, if it's shared, use -lutils)
+LIBRARY = -lutils
+
+# Sources and objects
+SRCS = main.c
+OBJS = $(SRCS:.c=.o)
+
+# Executable output
+EXEC = my_program
+
+# Targets
+all: $(EXEC)
+
+$(EXEC): $(OBJS)
+	$(CC) $(OBJS) -o $(EXEC) -L$(LIBRARY_PATH) $(LIBRARY)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -I$(INCLUDE_PATH) -c $< -o $@
+
+clean:
+	rm -f $(OBJS) $(EXEC)
+```
+
+4. After that, you're free to use the library:
+
 ```c
-#include <custom_utils.h> // always make sure to include
-// or #include "custom_utils.h"
+#include <fetch_utils.h>
+// note that I don't need to include print_utils.h since fetch_utils.h already has it included
 
-int main()
+int main(int argc, char **argv)
 {
-    // example usage
     int num;
+    int arr[5] = { 1, 2, 3, 5, 4 };
 
-    fetch(&num, "[+] Please input value: ", 0, 5, TYPE_LD);
+    fetch_number(&num, "[-] Please input a number: ", 0, 100, TYPE_LD); // gets integer from user
 
     printf("%d\n", num);
+    print_number_array(arr, 5, "[+] Array elements:", TYPE_LD);
 
     return 0;
 }
@@ -148,6 +175,7 @@ This library uses the C17 standard for C.
 This library uses the GNU++17 standard for C++.
 
 **WARNING:** Make sure that there are no conflicting names when using this library.
+**WARNING:** Since version 1.2.0, the library became modular, so make sure to change the inclusions.
 
 ## Compatibility
 

@@ -1,5 +1,5 @@
 /*
- * [ Utility ]
+ * [ libcustomutils ]
  * ----------------------
  * File Name    : sort_utils.c
  * Author       : Heisnx (c)
@@ -14,7 +14,9 @@
  *      - No notable warnings as of v1.0.2
  */
 
+/* [ Headers ] */
 #include <custom_utils.h>
+#include <print_utils.h>
 
 /*
  * partition()

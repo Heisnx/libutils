@@ -1,5 +1,5 @@
 /*
- * [ Utility ]
+ * [ libcustomutils ]
  * ----------------------
  * File Name    : fetch_utils.c
  * Author       : Heisnx (c)
@@ -9,14 +9,11 @@
  * Description:
  *      This source file contains functions oriented
  *      at receiving user input.
- *
- * Warnings:
- *      - [v1.0.4] fetch() with TYPE_C will always read the first value
- *        of the input buffer even if the user input more than 1 character.
  */
 
 /* [ Headers ] */
 #include <custom_utils.h>
+#include <fetch_utils.h>
 
 /*
  * fetch_number_array()
@@ -51,7 +48,7 @@ void fetch_number_array(void *arr, int len, const char *prompt, Fetch_Type type,
                 fetch_number((float*)arr + i, buffer, min, max, type);
                 break;
             default:
-                fputs("[!] Unsupported type\n", stderr);
+                print_warning("Unsupported type\n");
                 break;
         }
     }
@@ -78,19 +75,21 @@ void fetch_number(void *input, const char *prompt, double min, double max, Fetch
 
         if (fgets(buffer, sizeof(buffer), stdin))
         {
+            double value = strtod(buffer, &endptr);
+
             if (is_empty(buffer)) 
             {
-                fputs("[!] Input cannot be empty or a new line character\n", stderr);
+                print_error("Input cannot be empty of a new line character\n");
                 continue;
             }
             else if (validate(endptr, strtod(buffer, &endptr), min, max))
             {
-                printf("%lf\n", strtod(buffer, &endptr));
-                printf("[!] Input out of range: %lf ~ %lf\n", min, max);
+                print_error("Input is invalid: non-number or invalid range\n");
+                print_warning("Input must be in range [ %.1lf ] => [ %.1lf ]\n", min, max);
                 continue;
             }
 
-            switch (type) 
+            switch (type)
             {
                 case TYPE_LD:
                     *(long *)input = (long)strtol(buffer, &endptr, 10);
@@ -105,10 +104,10 @@ void fetch_number(void *input, const char *prompt, double min, double max, Fetch
                     *(unsigned long *)input = (unsigned long)strtoul(buffer, &endptr, 16);
                     break;
                 case TYPE_F:
-                    *(float *)input = strtof(buffer, &endptr);
+                    *(float *)input = (float)strtof(buffer, &endptr);
                     break;
                 case TYPE_LF:
-                    *(double *)input = strtod(buffer, &endptr);
+                    *(double *)input = (double)strtod(buffer, &endptr);
                     break;
                 default:
                     fputs("[!] Unsupported type\n", stderr);
@@ -117,7 +116,7 @@ void fetch_number(void *input, const char *prompt, double min, double max, Fetch
             break;
         }
         else
-            fputs("[!] Error reading input\n", stderr);
+            print_error("Error reading input\n");
 
     } while (true);
 }
@@ -138,7 +137,8 @@ void fetch_string(char *input, const char *prompt)
 
         if (fgets(buffer, BUFFER, stdin) == NULL)
         {
-            fputs("[!] Error reading input\n", stderr);
+            print_error("Error reading input\n");
+            print_warning("Buffer cannot be empty\n");
             continue;
         }
 

@@ -93,9 +93,41 @@
     that can print arrays of the same data types as `fetch_number()`
     except octals and hexadecimals.
 
+## [v1.2.0] - 05/11/2024 [Update]
+### Changes
+- **Global**
+    - Changed to modular library with header files:
+        - **`fetch_utils.h`
+        - **`print_utils.h`
+        - **`sort_utils.h`
+    - Changed `README.md` instructions to reflect on this change.
+    - Changed library to package within CMake.
+    - Modified installation guide.
+    - Started using Github's release feature for updates.
+
+- **`custom_utils.h`**
+    - Added colour macros:
+        - Red;
+        - Blue;
+        - Yellow;
+        - Green;
+        - Bold;
+        - Reset (reset colour).
+
+- **`print_utils.h`**
+    - New function `print_warning()`
+    - New function `print_error()`
+    - Enhanced `print_number_array()`
+
+- **`fetch_utils.c`**
+    - Fixed `fetch_number()` logic to properly handle non-numeric inputs.
+    - Fixed `fetch_number()` conversion logic (again).
+
 ### Considerations
-- Future plans to split `utils.h` into multiple header files.
-- May add more string fetching options.
+- None as of v1.2.0
 
 ### Warnings
-- Users of older versions should review this changelog for potential compatibility issues before upgrading, especially regarding function removals and significant changes in functionality.
+Users of older versions should review this changelog for potential compatibility issues before upgrading, especially regarding function removals and significant changes in functionality.
+
+From version 1.2.0, the library became modular, so make sure to include the specific headers based on your usage - including custom_utils.h
+no longer works!

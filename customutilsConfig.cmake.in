@@ -1,16 +1,16 @@
-# customutilsConfig.cmake.in
-
 @PACKAGE_INIT@
 
-set(customutils_INCLUDE_DIRS "@PACKAGE_INCLUDE_DIRS@")
-set(customutils_LIBRARIES "@PACKAGE_LIBRARIES@")
+# Include the exported targets file
+include("${CMAKE_CURRENT_LIST_DIR}/customutilsTargets.cmake")
 
-# Optionally provide version information
+# Optionally set the version information
 set(customutils_VERSION "@PACKAGE_VERSION@")
 
-# Provide an interface for other CMake projects
-include(CMakeFindDependencyMacro)
-find_dependency("AnotherLibrary")
+# If you have dependencies, uncomment and replace with actual dependencies
+# include(CMakeFindDependencyMacro)
+# find_dependency(DependencyName)
 
-# Mark the include directories for consumers
-include_directories(${customutils_INCLUDE_DIRS})
+# Ensure the target uses the correct include directories automatically
+# Consumers should use:
+# find_package(customutils REQUIRED)
+# target_link_libraries(their_target customutils::customutils)
