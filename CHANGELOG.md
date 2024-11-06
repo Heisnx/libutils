@@ -103,7 +103,6 @@
     - Changed `README.md` instructions to reflect on this change.
     - Changed library to package within CMake.
     - Modified installation guide.
-    - Started using Github's release feature for updates.
 
 - **`custom_utils.h`**
     - Added colour macros:

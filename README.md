@@ -1,6 +1,6 @@
 # Utility Functions for C
 
-[![Version](https://img.shields.io/github/v/release/Heisnx/libutils.svg)](https://github.com/Heisnx/libutils/releases)
+[![Version](https://img.shields.io/badge/version-v1.2.0-red.svg)](https://shields.io/)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://choosealicense.com/)
 
 A collection of utility functions for C programming, designed to simplify common tasks such as printing, sorting, and fetching user input. This small project is still a work in progress.
