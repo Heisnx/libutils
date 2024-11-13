@@ -3,8 +3,8 @@
  * ----------------------
  * File Name    : print_utils.c
  * Author       : Heisnx (c)
- * Date Created : 29/10/2024
- * Last Modified: 04/11/2024
+ * Date Created : 04/11/2024
+ * Last Modified: 12/11/2024
  * 
  * Description:
  *      This source file contains functions oriented
@@ -17,6 +17,27 @@
 /* [ Headers ] */
 #include <custom_utils.h>
 #include <print_utils.h>
+
+/* [ Colours ] */
+
+const Color RED = { "\x1b[31m", NULL };
+const Color GREEN = { "\x1b[32m", NULL };
+const Color YELLOW = { "\x1b[33m", NULL };
+const Color BLUE = { "\x1b[34m", NULL };
+const Color MAGENTA = { "\x1b[35m", NULL };
+const Color CYAN = { "\x1b[36m", NULL };
+
+/* [ Arrays ]*/
+
+size_t type_sizes[] = {
+    [TYPE_INT] = sizeof(int),
+    [TYPE_LONG] = sizeof(long),
+    [TYPE_LONG_LONG] = sizeof(long long),
+    [TYPE_FLOAT] = sizeof(float),
+    [TYPE_DOUBLE] = sizeof(double),
+};
+
+/* [ Functions ] */
 
 /*
  * print_divider()
@@ -31,17 +52,7 @@
  */
 void print_divider(size_t len, Char_Type divider)
 {
-    char ch;
-
-    switch(divider)
-    {
-        case DASH:          ch = '-'; break;
-        case EQUALS:        ch = '='; break;
-        case ASTERISK:      ch = '*'; break;
-        case TILDE:         ch = '~'; break;
-        case HASH:          ch = '#'; break;
-        case UNDERSCORE:    ch = '_'; break;
-    }
+    char ch = char_determ(divider);
 
     for (size_t i = 0; i < len; ++i)
         printf("%c", ch);
@@ -50,42 +61,47 @@ void print_divider(size_t len, Char_Type divider)
 }
 
 /*
- * print_number_array()
+ * print_array()
  * ----------------------
  * Description:
  *      Prints the elements of an array in a formatted list.
  */
-void print_number_array(void *arr, int len, const char *msg, Fetch_Type type)
+void print_array(void *arr, int len, const char *msg, Fetch_Type type)
 {
-    printf(BOLD "%s\n" RESET, msg);
-    printf("\t{ ");
+    printf(BOLD "%s " RESET, msg);
+    printf("{ ");
+    printf(GREEN.fg_color);
 
     for (int i = 0; i < len; ++i)
     {
-        switch (type)
-        {
-            case TYPE_LD:
-                printf(GREEN "%ld", *((long int *)arr + i));
-                break;
-            case TYPE_LLD:
-                printf(GREEN "%lld", *((long long int *)arr + i));
-                break;
-            case TYPE_F:
-                printf(GREEN "%.2f", *((float *)arr + i));
-                break;
-            case TYPE_LF:
-                printf(GREEN "%.2lf", *((double *)arr + i));
-                break;
-            default:
-                print_warning("Unsupported type\n");
-                return;
-        }
+        print_type_determ(arr, type, i);
 
         if (i < len - 1)
             printf(", ");
     }
 
-    printf( RESET " }\n");
+    printf(RESET " }\n");
+}
+
+/*
+ * print_matrix()
+ * ----------------------
+ * Description:
+ *      Prints the elements of a matrix in a formatted manner,
+ *      by calling print_array() for each row.
+ */
+void print_matrix(void **matrix, int rows, int cols, const char *msg, Fetch_Type type)
+{
+    printf(BOLD "%s " RESET, msg);
+    printf("{\n");
+
+    // Iterate through each row
+    for (int i = 0; i < rows; ++i) 
+    {
+        print_array(matrix[i], cols, "Row", type);
+    }
+
+    printf("}\n");
 }
 
 /*
@@ -121,12 +137,12 @@ void print_progress_bar(int progress, int total, int width, Char_Type fill_compl
 
     if (total <= 0 || width <= 0) 
     {
-        print_error("[!] Total and width must be greater than 0\n");
+        print_log("[!]", RED, "Total and width must be greater than 0\n");
         return;
     }
     else if (progress > total)
     {
-        print_error("[!] Progress made cannot be larger than total: [ %d ] > [ %d ]\n", progress, total);
+        print_log("[!]", RED, "Progress made cannot be larger than total: [ %d ] > [ %d ]\n", progress, total);
         return;
     }
 
@@ -147,52 +163,25 @@ void print_progress_bar(int progress, int total, int width, Char_Type fill_compl
 }
 
 /*
- * Function: print_warning()
+ * Function: print_log()
  * ----------------------
  * Description:
- *      Prints out a warning message with whatever amount of arguments.
+ *      Prints out an log message with whatever amount of arguments.
  */
-void print_warning(const char *format, ...)
+void print_log(const char *prefix, Color color, const char *format, ...)
 {
     va_list args;
     va_start(args, format);
-    fprintf(stderr, BOLD YELLOW "[?] ");
+
+    if (color.fg_color)
+    {
+        fprintf(stderr, "%s%s%s%s" RESET " ", color.fg_color, color.bg_color ? color.bg_color : "", BOLD, prefix);
+        fprintf(stderr, "%s%s", color.fg_color, color.bg_color ? color.bg_color : "");
+    }
+
     vfprintf(stderr, format, args);
     fprintf(stderr, RESET);
     va_end(args);
 }
-
-/*
- * Function: print_error()
- * ----------------------
- * Description:
- *      Prints out an error message with whatever amount of arguments.
- */
-void print_error(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    fprintf(stderr, BOLD RED "[!] ");
-    vfprintf(stderr, format, args);
-    fprintf(stderr, RESET);
-    va_end(args);
-}
-
-/*
- * Function: print_debug()
- * ----------------------
- * Description:
- *      Prints out a debug message with whatever amount of arguments.
- */
-void print_debug(const char *format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    fprintf(stderr, BOLD BLUE "[*] ");
-    vfprintf(stderr, format, args);
-    fprintf(stderr, RESET);
-    va_end(args);
-}
-
 
 /* print_utils.c */

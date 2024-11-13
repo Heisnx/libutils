@@ -4,8 +4,8 @@
  * File Name    : custom_utils.h
  * Author       : Heisnx (c)
  * Date Created : 29/10/2024
- * Last Modified: 05/11/2024
- * Version      : v1.2.1
+ * Last Modified: 12/11/2024
+ * Version      : v1.2.2
  * License      : MIT
  * 
  * Description  :
@@ -24,6 +24,9 @@
 #include <stdbool.h>            // to identify whether the required value is int or double in fetch_value()
 #include <string.h>             // to deal with string logic in fetch_string()
 #include <stdarg.h>             // to use va_list
+#include <unistd.h>             // isatty() & fileno()
+// #include <io.h>              // isatty() on some Windows OS
+// #include <fcntl.h>           // fileno() on some Windows OS
 
 /*
  * [INFO]: The full description of each function will be present
@@ -32,43 +35,54 @@
  */
 
 /* [ Macros ]  */
-#define BUFFER (256)                // buffer limit
-#define MINLIM12 (-2048)            // the 12 bit lower bound
-#define MAXLIM12 (2047)             // the 12 bit upper bound
-#define MINLIM16 (-32768)           // the 16 bit lower bound
-#define MAXLIM16 (32767)            // the 16 bit upper bound
-#define MINLIM32 (-2147483648)      // the 32 bit lower bound
-#define MAXLIM32 (2147483647)       // the 32 bit upper bound
 
-/* [ Colours ] */
-#define RESET       "\033[0m"
-#define BOLD        "\033[1m"
-#define RED         "\033[1;31m"
-#define GREEN       "\033[1;32m"
-#define BLUE        "\033[1;34m"
-#define YELLOW      "\033[1;33m"
+#define RESET "\x1b[0m" // reset colour and bold text
+#define BOLD "\x1b[1m"  // bold text
+#define BUFFER (512)    // buffer limit
 
-/* [ Enums & Structs ] */
+/* [ Structs ] */
+
+typedef struct 
+{
+    const char *fg_color;
+    const char *bg_color;
+} Color;
+
+/* [ Enums ] */
+
+/* This enum is used by two headers, so it's positioned here. */
 typedef enum
 {
-    TYPE_LD,    // [ long int ]         [ 8 bytes ]
-    TYPE_LLD,   // [ long long int ]    [ 8 bytes ] 
-    TYPE_O,     // [ octal ]            [ 4/8 bytes ]
-    TYPE_X,     // [ hexadecimal ]      [ 4/8 bytes ]
-    TYPE_F,     // [ float ]            [ 4 bytes ]
-    TYPE_LF,    // [ double ]           [ 8 bytes ]  
-    TYPE_S      // [ string ]           [ x bytes ]
+    TYPE_INT,           // [ int ]              [ 2/4 bytes ]
+    TYPE_LONG,          // [ long int ]         [ 8 bytes ]
+    TYPE_LONG_LONG,     // [ long long int ]    [ 8 bytes ] 
+    TYPE_FLOAT,         // [ float ]            [ 4 bytes ]
+    TYPE_DOUBLE,        // [ double ]           [ 8 bytes ]
 } Fetch_Type;
 
-typedef enum
-{
-    DASH,       // [---] divider out of dashes
-    EQUALS,     // [===] divider out of equals signs
-    ASTERISK,   // [***] divider out of asterisks
-    TILDE,      // [~~~] divider out of tildes
-    HASH,       // [###] divider out of hashes
-    UNDERSCORE, // [___] divider out of underscores
-} Char_Type;
+/* [ Colours ] */
+
+extern const Color RED;
+extern const Color GREEN;
+extern const Color YELLOW;
+extern const Color BLUE;
+extern const Color MAGENTA;
+extern const Color CYAN;
+
+/* [ Arrays ] */
+
+/*
+ * type_sizes[]
+ * ----------------------
+ * Description:
+ *      The byte size of different data types.
+ * 
+ * Notes:
+ *      - This generic macro is kept in the main header as it can be used independently.
+ *      - Octals and hexadecimals in code get interpreted as integers - long long.
+ *      - Defaults to zero for easier debugging.
+ */
+extern size_t type_sizes[];
 
 /* [ Inline Functions ] */
 

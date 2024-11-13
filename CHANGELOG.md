@@ -130,8 +130,40 @@
 - **`print_utils.h`**
     - New function `print_debug()`.
 
+## [v1.2.2] - 12/11/2024 [Patch]
+### Changes
+- **Global**
+    - Slightly tweaked the `README.md` file.
+    - Fixed creation dates within the files' initial comments.
+
+- **`custom_utils.h`**
+    - Removed `MINLIM12` and all of its counterparts.
+    - Added reference `unistd.h` with warning.
+    - Updated colour logic, adding new magenta and cyan colours.
+    - Removed `TYPE_O` and `TYPE_X` (octal and hexadecimal) from `Fetch_Type`.
+    - Changed `Fetch_Type` elements to be more descriptive `TYPE_D` -> `TYPE_INT`.
+    - Added new global array `type_sizes`, used in two modules.
+    - Increased `BUFFER` to 512 bytes from 256 bytes.
+
+- `**fetch_utils.h`**
+    - Renamed `fetch_number_array()` to `fetch_array()`
+    - Updated `fetch_number()` and `fetch_array()` logic (it should still work the same).
+    - Added new `fetch_matrix()` function.
+    - Added new inline functions `convert_input()` and `fetch_array_element()`
+
+- `**print_utils.h`
+    - Renamed `print_number_array()` to `print_array()`.
+    - Updated `print_array()` logic (it should still work the same).
+    - Updated `print_log()` logic.
+    - Updated `print_divider()` logic.
+
+- `**sort_utils.h`
+    - Fixed issue where `bubble_sort()`, `merge()`, and `merge_sort` only existed in source file.
+
 ### Considerations
-- None as of v1.2.0
+- Bringing background colours to `print_log()`
+- Removing `fetch_utils.c` logic redundancy.
+- Simplify `fetch_matrix()`
 
 ### Warnings
 Users of older versions should review this changelog for potential compatibility issues before upgrading, especially regarding function removals and significant changes in functionality.

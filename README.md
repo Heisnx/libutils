@@ -1,6 +1,6 @@
 # Utility Functions for C
 
-[![Version](https://img.shields.io/badge/version-v1.2.1-red.svg)](https://shields.io/)
+[![Version](https://img.shields.io/badge/version-v1.2.2-red.svg)](https://shields.io/)
 [![License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](https://choosealicense.com/)
 
 A collection of utility functions for C programming, designed to simplify common tasks such as printing, sorting, and fetching user input. This small project is still a work in progress.
@@ -12,7 +12,8 @@ A collection of utility functions for C programming, designed to simplify common
 - [Installation](#installation)
 - [Usage](#usage)
 - [Symbol Notation](#symbol-notation)
-- [Notes](#notes)
+- [Warnings](#warnings)
+- [Additional](#additional)
 - [Compatibility](#compatibility)
 
 ## Features
@@ -161,21 +162,45 @@ int main(int argc, char **argv)
 
 ## Symbol Notation
 
-To enhance the clarity of the output in your program, we use the following symbols:
-
 - `[+]`: Program output - This symbol is used for general messages from the program, indicating successful actions or confirmations.
 - `[-]`: User input prompt - This symbol precedes messages that expect user input.
 - `[*]`: Debug output - This symbol is used for debugging information that may help in diagnosing issues during development.
 - `[!]`: Error messages - This symbol indicates that an error has occurred, providing details about what went wrong.
 - `[?]`: Warning messages - This symbol is used to flag potential issues that do not stop the program but should be noted.
 
-## Notes
+## Warnings
+
+**WARNING:** Make sure you don't have any buffer overflows as the size of `BUFFER` is only 512 bytes!
+**WARNING:** Make sure that there are no conflicting names when using this library.
+**WARNING:** Since version 1.2.0, the library became modular, so make sure to change the inclusions.
+
+## Additional
 
 This library uses the C17 standard for C.
 This library uses the GNU++17 standard for C++.
 
-**WARNING:** Make sure that there are no conflicting names when using this library.
-**WARNING:** Since version 1.2.0, the library became modular, so make sure to change the inclusions.
+the `print_matrix()` function is a bit complex in usage, but here's an example on how to implement it:
+
+```c
+#include <fetch_utils.h>
+#include <print_utils.h>
+
+int main() 
+{
+    int rows = 2;
+    int cols = 2;
+    
+    int **matrix = NULL;
+    
+    const char *prompt = "Enter value";
+
+    fetch_matrix((void ***)&matrix, rows, cols, prompt, TYPE_INT, 0, 100, true);
+
+    print_matrix((void **)matrix, rows, cols, "Matrix: ", TYPE_INT);
+
+    return 0;
+}
+```
 
 ## Compatibility
 

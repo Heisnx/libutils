@@ -3,8 +3,8 @@
  * ----------------------
  * File Name    : print_utils.h
  * Author       : Heisnx (c)
- * Date Created : 05/10/2024
- * Last Modified: 05/11/2024
+ * Date Created : 04/11/2024
+ * Last Modified: 12/11/2024
  * 
  * Description  :
  *      This file contains all of the declarations for
@@ -29,6 +29,63 @@
  * will only have a shortened description for code clarity.
  */
 
+/* [ Structs ] */
+
+typedef enum
+{
+    DASH,       // [---] divider out of dashes
+    EQUALS,     // [===] divider out of equals signs
+    ASTERISK,   // [***] divider out of asterisks
+    TILDE,      // [~~~] divider out of tildes
+    HASH,       // [###] divider out of hashes
+    UNDERSCORE, // [___] divider out of underscores
+} Char_Type;
+
+/* [ Inline Functions ] */
+
+/*
+ * char_determ()
+ * ----------------------
+ * Desctiption:
+ *      An inline function to assign the proper symbol.
+ * 
+ * Notes:
+ *      - Returns a '?' if the input is unexpected.
+ */
+static inline char char_determ(Char_Type type) {
+    switch (type) {
+        case DASH:         return '-';
+        case EQUALS:       return '=';
+        case ASTERISK:     return '*';
+        case TILDE:        return '~';
+        case HASH:         return '#';
+        case UNDERSCORE:   return '_';
+        default:           return '?';
+    }
+}
+
+/*
+ * print_type_determ()
+ * ----------------------
+ * Desctiption:
+ *      Determines the type of value to print for the arr value.
+ * 
+ * Notes:
+ *      - Returns a '?' if the input is unexpected.
+ */
+static inline void print_type_determ(void* arr, Fetch_Type type, int idx)
+{
+    switch(type)
+    {
+        case TYPE_INT:          printf("%d", *((int *)arr + idx)); break;
+        case TYPE_LONG:         printf("%ld", *((long int *)arr + idx)); break;
+        case TYPE_LONG_LONG:    printf("%lld", *((long long int *)arr + idx)); break;
+        case TYPE_FLOAT:        printf("%.2f", *((float *)arr + idx)); break;
+        case TYPE_DOUBLE:       printf("%.4lf", *((double *)arr + idx)); break;
+        default:                printf("\x1b[31m [ERROR] Unexpected type \x1b[0m\n");
+    }
+}
+
 /* [ Functions ] */
 
 /*
@@ -46,7 +103,7 @@
 void print_divider(size_t len, Char_Type divider);
 
 /*
- * Function: print_number_array()
+ * Function: print_array()
  * ----------------------
  * Description:
  *      Prints the elements of an array in a formatted list.
@@ -61,7 +118,25 @@ void print_divider(size_t len, Char_Type divider);
  * Notes:
  *      - Leave msg blank for no message.
  */
-void print_number_array(void *arr, int len, const char *msg, Fetch_Type type);
+void print_array(void *arr, int len, const char *msg, Fetch_Type type);
+
+/*
+ * print_matrix()
+ * ----------------------
+ * Description:
+ *      Prints the elements of a matrix in a formatted manner,
+ *      by calling print_array() for each row.
+ * 
+ * Arguments:
+ *      - matrix[][]: The matrix to print.
+ *      - rows      : Number of rows.
+ *      - cols      : Number of columns.
+ *      - msg       : Message given to the user.
+ *      - type      : Type of data to fetch.
+ * 
+ * Return: -
+ */
+void print_matrix(void **matrix, int rows, int cols, const char *msg, Fetch_Type type);
 
 /*
  * Function: print_progress_bar()
@@ -81,46 +156,18 @@ void print_number_array(void *arr, int len, const char *msg, Fetch_Type type);
 void print_progress_bar(int progress, int total, int width, Char_Type fill_complete, Char_Type fill_remaining);
 
 /*
- * Function: print_warning()
+ * Function: print_log()
  * ----------------------
  * Description:
- *      Prints out an warning message with whatever amount of arguments.
+ *      Prints out an log message with whatever amount of arguments.
  * 
 * Arguments:
- *      - format: A string containing the format specification for the warning message.
+ *      - format: A string containing the format specification for the log message.
  *      - ...   : Additional arguments that match the format placeholders (e.g., integers, floats, strings).
  * 
  * Return: -
  */
-void print_warning(const char *format, ...);
-
-/*
- * Function: print_error()
- * ----------------------
- * Description:
- *      Prints out an error message with whatever amount of arguments.
- * 
-* Arguments:
- *      - format: A string containing the format specification for the error message.
- *      - ...   : Additional arguments that match the format placeholders (e.g., integers, floats, strings).
- * 
- * Return: -
- */
-void print_error(const char *format, ...);
-
-/*
- * Function: print_debug()
- * ----------------------
- * Description:
- *      Prints out a debug message with whatever amount of arguments.
- * 
- * Arguments:
- *      - format: A string containing the format specification for the debug message.
- *      - ...   : Additional arguments that match the format placeholders (e.g., integers, floats, strings).
- * 
- * Return: -
- */
-void print_debug(const char *format, ...);
+void print_log(const char *prefix, Color color, const char *format, ...);
 
 #endif // PRINT_UTILS_H
 
